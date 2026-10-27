@@ -22,9 +22,20 @@ canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
 @keyframes rl{to{background-position:.9em 0}}
 #D{position:absolute;left:3%;right:3%;bottom:3%;display:none;padding:.5em .7em;background:rgba(10,8,20,.93);border:.14em solid #ffd77a;min-height:2.3em}
 #D::after{content:"▼";position:absolute;right:.5em;bottom:.2em;font-size:.6em;color:#ffd77a;animation:bl 1s steps(2) infinite}
-#H{position:absolute;top:2%;left:2%;right:2%;background:rgba(0,0,0,.6);padding:.1em .5em;font-size:.65em}
+#TL{position:absolute;top:2%;left:2%;display:flex;flex-direction:column;align-items:flex-start;gap:.35em}
+#H{background:rgba(0,0,0,.6);padding:.05em .5em;font-size:.65em;width:fit-content}
+#HB{display:flex;gap:.1em;padding:.15em;background:#c6c6c6;border:.12em solid #1a1a1a;font-size:.8em}
+.hs{position:relative;width:1.35em;height:1.35em;box-sizing:border-box;background:#8b8b8b;border:.1em solid;border-color:#373737 #fff #fff #373737;display:flex;align-items:center;justify-content:center}
+.hs img{width:1.05em;image-rendering:pixelated}
+.hs[data-n]:hover::after{content:attr(data-n);position:absolute;top:115%;left:0;white-space:nowrap;background:rgba(16,0,16,.94);border:.1em solid #2a0a5e;color:#fff;padding:.05em .4em;z-index:8;font-size:.8em}
+#PB{position:absolute;top:2%;right:2%;z-index:9;font:inherit;font-size:.9em;font-weight:700;background:rgba(0,0,0,.6);color:#ffd77a;border:.12em solid #ffd77a;padding:0 .5em;cursor:pointer}
+#KH{position:absolute;left:2%;bottom:3%;display:none;flex-direction:column;gap:.2em;font-size:.6em}
+#KH kbd{display:inline-block;min-width:1.4em;text-align:center;font:inherit;border:.15em solid #ffd77a;color:#ffd77a;background:rgba(0,0,0,.6);padding:0 .35em;margin-right:.4em}
+#PM button{display:block;min-width:9em}
+#PM label{display:block}
+#PM input[type=range]{width:10em;vertical-align:middle;accent-color:#ffd77a}
 #I{position:absolute;bottom:3%;left:50%;transform:translateX(-50%);display:none;background:rgba(0,0,0,.65);padding:.1em .6em;font-size:.8em;color:#7fe3a8}
-#W button,#W input{font:inherit;font-size:.9em;background:#2a2440;color:#f4efe0;border:.1em solid #ffd77a;padding:.05em .6em;cursor:pointer;margin:.1em}
+#W button,#W input,#PM button{font:inherit;font-size:.9em;background:#2a2440;color:#f4efe0;border:.1em solid #ffd77a;padding:.05em .6em;cursor:pointer;margin:.1em}
 #W input{text-align:center;width:5em;text-transform:uppercase}
 .cd{display:inline-block;margin:.15em;padding:.1em .6em;background:#3b3358;border:.1em solid #ffd77a;cursor:grab}
 .sl{display:inline-block;min-width:5.5em;min-height:1.6em;margin:.15em;padding:.1em .4em;border:.1em dashed #7fe3a8;vertical-align:top}
@@ -32,8 +43,8 @@ canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
 @media (prefers-reduced-motion:reduce){.b,#D::after,.rail{animation:none}}
 </style></head><body>
 <div id="g"><canvas id="c" width="640" height="360"></canvas>
-<div id="H"></div><div id="I">[E] Tương tác</div><div id="D"></div>
-<div class="ov" id="W"></div><div class="ov" id="V"></div></div>
+<div id="TL"><div id="H"></div><div id="HB"></div></div><button id="PB">||</button><div id="I"></div><div id="KH"></div><div id="D"></div>
+<div class="ov" id="W"></div><div class="ov" id="V"></div><div class="ov" id="PM" style="z-index:10"></div></div>
 <script>
 const $=i=>document.getElementById(i),c=$('c'),g=c.getContext('2d'),D=$('D'),V=$('V'),W=$('W'),H=$('H'),I=$('I');
 const pal={a:'#f4efe0',b:'#8b5a3c',c:'#c98a4b',d:'#2a2a33',e:'#d9534f',f:'#4a9de0',g:'#4a9a4a',h:'#f2c94c',i:'#f1c9a0',j:'#8a93a8',k:'#5c3b22',l:'#e07a9a',m:'#dfe6ee',n:'#2f4a3a',o:'#e8d28a',s:'#9ed0f0',t:'#d9b98c',u:'#3a6b5a'};
@@ -118,10 +129,38 @@ const LV=[
  {t:'d',q:'Ghép lại tấm ảnh cũ: kéo từng mảnh vào đúng góc.',cards:['Cây ổi','Mái nhà','Giếng','Mặt trời'],sl:['Trái-trên','Phải-trên','Trái-dưới','Phải-dưới'],a:['Mái nhà','Mặt trời','Giếng','Cây ổi'],ic:'candy',n:'Hộp kẹo của bà',m:'Hộp kẹo của bà. Kẹo đã chảy, nhưng vị ngọt vẫn còn.',h:'Đọc tấm ảnh cũ gần gốc cây.'}]}];
 const AR=[[196,247,294,247],[262,330,392,330],[220,262,330,262],[294,349,440,349],[262,330,392,523]];
 let M='ov',L,li=0,ents,X,cs,bg,P,got=0,need=0,inv=[],nb=[],mem=[],sc='play',T=0,last=performance.now(),fade=0,fT=null,fcb,q=[],qcb,ocb,K={},A,ca=0,cb=0,bi,bs=0,SP={},nbo=0;
+let lang='vi',vs=1,vm=1,pm,IK={};const HB=$('HB'),KH=$('KH'),PM=$('PM'),PB=$('PB');
+const EN={'Văn phòng · 03:07':'Office · 03:07','KÝ ỨC 1 · 25 TUỔI':'MEMORY 1 · AGE 25','KÝ ỨC 2 · 21 TUỔI':'MEMORY 2 · AGE 21','KÝ ỨC 3 · 15 TUỔI':'MEMORY 3 · AGE 15','KÝ ỨC 4 · 6 TUỔI':'MEMORY 4 · AGE 6','Ngày đầu đi làm':'First Day at Work','Giảng đường đại học':'University Lecture Hall','Thời học sinh':'School Days','Về quê thuở ấu thơ':'Back to the Countryside',
+'Mùi giấy mới':'The smell of fresh paper, a small desk and big hopes. Find the 3 items from that day.','Những đêm thức':'Late nights chasing dreams, laughter after class. Find the 3 items from those years.','Tiếng trống trường':'School drums, chalk dust and naive promises. Find the 3 items from that day.','Cánh đồng, mùi khói':'Fields, kitchen smoke and a familiar embrace. Find the last 3 items.',
+'Bảng trắng ghi':'The whiteboard lists this week’s meetings: Monday — Report. Tuesday — Contract. Wednesday — Budget. Thursday — New Project.','Lịch tháng 3':'March calendar: the 7th is circled in red. Your first day at work.','Lịch tháng 9':'A former colleague’s September calendar, the 21st circled in blue. Not yours.','Bảng tên trên':'Desk nameplate: DESK No. 12.','Post-it dán':'A sticky note on the locker: Locker code = desk number + first day at work.','Chậu cây héo':'The potted plant has wilted. You never got around to watering it last week.',
+'Gói cà phê':'Coffee packet','Gói cà phê hòa':'Instant coffee, still sealed in the desk drawer.','Cốc':'Cup','Chiếc cốc sứ':'An empty porcelain cup on the desk.','Tủ khóa 4 số':'A 4-digit locker. Enter the code.','Cà vạt của mẹ':'Mom’s Necktie','Chiếc cà vạt m':'The necktie Mom gave you. She said: don’t forget to eat on time.','Mã = số bàn':'Code = desk number (2 digits) + first day at work (2 digits). Pick the right calendar.',
+'Ly cà phê':'Cup of Coffee','Ly cà phê đầu':'The first coffee at the company. You thought: after this project, I’ll rest.','Gom đủ cốc':'Gather the cup and the coffee packet, then bring them to the hot water dispenser.','Kéo mỗi tập':'Drag each file to the right meeting day.','Ngân sách':'Budget','Dự án mới':'New Project','Báo cáo':'Report','Hợp đồng':'Contract','Thứ Hai':'Monday','Thứ Ba':'Tuesday','Thứ Tư':'Wednesday','Thứ Năm':'Thursday','Thẻ nhân viên':'Employee Badge','Tấm thẻ còn':'The badge is brand new. The face in the photo is beaming.','Đọc lịch họp':'Read the meeting schedule on the whiteboard.',
+'Bảng ca học':'Class shifts: Morning, then Noon, then Evening. Always in that order.','Cuốn Đại số':'The Algebra book, bookmarked with card No. 7.','Cuốn Giải tích':'The Calculus book, bookmarked with card No. 4.','Cuốn Vật lý':'The Physics book, bookmarked with card No. 2.','Mảnh giấy ghi chú':'A note: Sort the three books alphabetically by title, then combine the numbers on the bookmarks.','Mảnh thư A':'Letter Piece A','Mảnh thư B':'Letter Piece B','Mảnh thư rách,':'A torn piece of a letter, in careful handwriting: To you, who sat in the back row...','Mảnh thư rách thứ':'A second torn piece, stuck under the table leg.','Chiếc xe đạp':'An old bicycle leans on the wall, its basket full of books.',
+'Ba công tắc':'Three library light switches. Flip them in the right order.','Tối':'Evening','Sáng':'Morning','Trưa':'Noon','Giáo trình cũ':'Old Textbook','Cuốn giáo trình':'A textbook full of notes and coffee stains. Sleepless nights for a dream.','Xem bảng ca':'Look at the class shift board on the right.','Bức thư chưa gửi':'Unsent Letter','Bức thư tình':'A half-written love letter that was never sent. Youth is full of missed chances too.','Tìm hai mảnh':'Find the two torn pieces: one on the bench, one under the table.','Tủ đồ khóa 3 số':'A 3-digit locker.','Mũ cử nhân':'Graduation Cap','Chiếc mũ cử nhân':'The graduation cap. Mom cried so much that day.','Sắp 3 cuốn':'Sort the 3 books alphabetically: Algebra, Calculus, Physics.',
+'Trên bảng: Hà':'On the board: Hà sits in the left row. Nam sits right behind Hà. Lan sits in the right row, Tú sits right behind Lan.','Dòng phấn 4':'Four colors of chalk on the board, top to bottom: Red, Yellow, Blue, Green.','Bìa lưu bút':'The yearbook cover says: the password is the first letters of the names of the classmates in the back-left, back-right, then front-right seats.','Quạt trần':'The ceiling fan creaks. Outside, the school drum still echoes.','Xếp thẻ tên':'Place the name cards in the right seats (viewed from the board).','Trái-trên':'Left-front','Trái-dưới':'Left-back','Phải-trên':'Right-front','Phải-dưới':'Right-back','Viên phấn trắng':'White Chalk','Viên phấn đã':'A worn-down piece of chalk. Cleaning duty, silly pranks.','Đọc kỹ dòng':'Read the writing on the blackboard carefully.','Đàn gõ 4':'A 4-cup color xylophone. Strike them in order.','Lục':'Green','Xanh':'Blue','Đỏ':'Red','Vàng':'Yellow','Bài kiểm tra 10 điểm':'Perfect Score Test','Bài kiểm tra mười':'A test with a perfect ten. You ran all the way home to show Mom.','Thứ tự màu phấn':'The order of the chalk colors on the board.','Khóa lưu bút':'Yearbook lock, 3 letters.','Cuốn lưu bút':'Yearbook','Cuốn lưu bút k':'A yearbook full of wishes. One line says: take care of your health from now on.','Dùng sơ đồ':'Use the seating chart you just made: back-left, back-right, front-right.',
+'Giấy bà dặn':'Grandma’s note on the door: open the gate, then let the chickens out, then draw water from the well.','Tấm ảnh cũ: mặt':'An old photo: sun in the top-right corner, the roof in the top-left, the well right below the roof, the guava tree is the rest.','Khung tre':'Bamboo Frame','Khung tre còn':'A bamboo frame still smelling of sunshine, leaning by the shed.','Giấy dán':'Colored Paper','Mấy tờ giấy':'A few sheets of colored paper Grandma saved.','Mùi khói bếp':'The smell of kitchen smoke, Mom calling: come home for dinner, child!','Con diều giấy':'Paper Kite','Con diều giấy ':'A paper kite soaring high over the countryside sky. Back then, you didn’t know what tired meant.','Khung tre ở cạnh':'The bamboo frame is by the shed, the colored paper on the porch.','Cái cổng, bầy gà':'The gate, the chickens and the well. Do it in the order Grandma said.','Kéo nước':'Draw water','Mở cổng':'Open gate','Thả gà':'Free chickens','Nón lá của bà':'Grandma’s Conical Hat','Chiếc nón lá':'Grandma’s conical hat, smelling of sunshine and dry straw.','Xem tờ giấy':'Look at the note Grandma left on the door.','Ghép lại tấm ảnh':'Put the old photo back together: drag each piece to the right corner.','Cây ổi':'Guava tree','Mái nhà':'Roof','Giếng':'Well','Mặt trời':'Sun','Hộp kẹo của bà':'Grandma’s Candy Tin','Hộp kẹo của bà. ':'Grandma’s candy tin. The candy has melted, but the sweetness remains.','Đọc tấm ảnh cũ':'Read the old photo near the tree.',
+'Cửa toa tàu đóng':'The train door is shut tight. There are still memories left to find.','Tiếng còi tàu':'The train whistle sounds. The carriage door is open.','Nhặt được: ':'Picked up: ','Chưa làm được. Còn thiếu: ':'Can’t do that yet. Missing: ','Chưa đúng. Hãy thử':'Not right. Try again.','Gợi ý: ':'Hint: ','Gợi ý':'Hint','Mọi ký ức ở đây':'Every memory here has been found. Head to the train door.','Đã chọn: ':'Chosen: ','(trống)':'(empty)','Mở':'Open','Xác nhận':'Confirm','Esc: đóng':'Esc: close','Sổ tay manh mối':'Clue Notebook','Sổ tay':'Notebook','Chưa có manh mối':'No clues yet. Look closely at the objects around the room.','Tab / Esc: đóng':'Tab / Esc: close','Ký ức':'Memory','Tương tác':'Interact','Tạm dừng':'Pause','Trò chơi tạm dừng':'Game Paused','Tiếp tục':'Resume','Cài đặt':'Settings','Thoát về màn hình':'Quit to Title','Hiệu ứng âm':'Sound effects','Nhạc nền':'Music','Ngôn ngữ':'Language','Quay lại':'Back',
+'CHUYẾN TÀU':'THE TRAIN OF','KÝ ỨC':'MEMORIES','Một trò chơi giải đố ngắn':'A short puzzle game','Di chuyển: W A S D':'Move: W A S D or arrow keys · Enter: advance dialogue','Nhấn Enter để bắt đầu':'Press Enter to start','Nhấn Enter để chơi lại':'Press Enter to play again','Nhấn Enter':'Press Enter','Ga tiếp theo':'Next stop','HẾT':'THE END','Những ký ức anh':'The memories he carried','Đừng để mình':'Don’t let yourself burn out. Rest, and call your loved ones.',
+'Ba giờ sáng':'Three in the morning. Only he and the desk lamp remain in the office.','Ngoài cửa sổ':'Outside the window, a strange train has just stopped. Its side reads: MEMORIES.','Anh tò mò':'Curious, he walks toward the train door on the right. Press E near it to board.','Một chiều quê':'A countryside afternoon. The smell of dry straw and warm kitchen smoke.','Có ai đó ôm':'Someone holds him tight. So warm...','Mẹ ơi... con mệt':'Mom... I’m so tired.','Ngủ đi con. Mẹ':'Sleep, my child. Mom is here.','Văn phòng im lặng':'The office is silent. The desk lamp is still on. The clock has stopped.','Người đàn ông gục':'The man slumps over the desk. He had worked himself to exhaustion.','Đoàn tàu, những':'The train, the realms of memory... were only the last scraps of his fading consciousness.','Anh ra đi lặng lẽ':'He passes away quietly, in his mother’s arms, in a distant realm of memory.'};
+const EK=Object.keys(EN).filter(k=>k.length>=8).sort((a,b)=>b.length-a.length);
+const t=s=>{if(lang!='en'||typeof s!='string')return s;if(EN.hasOwnProperty(s))return EN[s];let k=EK.find(k=>s.startsWith(k));return k?EN[k]:s};
+function hb(){let it=inv.concat(mem),h='';for(let i=0;i<12;i++){let n=it[i];h+=n?'<div class="hs" data-n="'+t(n)+'"><img src="'+ic(IK[n]).toDataURL()+'"></div>':'<div class="hs"></div>'}HB.innerHTML=h}
+function applyLang(){document.documentElement.lang=lang;I.textContent='[E] '+t('Tương tác');KH.innerHTML=[['E','Tương tác'],['Tab','Sổ tay'],['H','Gợi ý'],['Esc','Tạm dừng']].map(a=>'<div><kbd>'+a[0]+'</kbd>'+t(a[1])+'</div>').join('');hud()}
+function pz(){if(M=='wait'||M=='pause')return;pm=M;M='pause';pmv(0)}
+function rs(){PM.style.display='none';M=pm}
+function qt(){PM.style.display='none';[D,W,V].forEach(e=>e.style.display='none');q=[];qcb=0;ocb=0;sc='play';fade=0;fT=null;title()}
+function sl(l){lang=l;applyLang();pmv(1)}
+function pmv(v){let h='';
+ if(!v)h='<h1>'+t('Trò chơi tạm dừng')+'</h1><button id="b1">'+t('Tiếp tục')+'</button><button id="b2">'+t('Cài đặt')+'</button><button id="b3">'+t('Thoát về màn hình')+'</button>';
+ else h='<h2>'+t('Cài đặt')+'</h2><label>'+t('Hiệu ứng âm')+' <input type="range" min="0" max="150" value="'+vs*100+'" id="r1"></label><label>'+t('Nhạc nền')+' <input type="range" min="0" max="150" value="'+vm*100+'" id="r2"></label><div>'+t('Ngôn ngữ')+': <button id="lv"'+(lang=='vi'?' style="background:#3b6a4a"':'')+'>Tiếng Việt</button><button id="le"'+(lang=='en'?' style="background:#3b6a4a"':'')+'>English</button></div><button id="b4">'+t('Quay lại')+'</button>';
+ PM.innerHTML=h;PM.style.display='flex';
+ if(!v){$('b1').onclick=rs;$('b2').onclick=()=>pmv(1);$('b3').onclick=qt}
+ else{$('r1').oninput=e=>{vs=e.target.value/100;bp(660,.1)};$('r2').oninput=e=>{vm=e.target.value/100};$('lv').onclick=()=>sl('vi');$('le').onclick=()=>sl('en');$('b4').onclick=()=>pmv(0)}}
+PB.onclick=pz;
 const vg=mk(640,360),vx=vg.getContext('2d'),vr=vx.createRadialGradient(320,180,160,320,180,430);vr.addColorStop(0,'rgba(0,0,0,0)');vr.addColorStop(1,'rgba(0,0,0,.5)');vx.fillStyle=vr;vx.fillRect(0,0,640,360);
-function bp(f,d=.08,t='square',v=.04){try{A=A||new AudioContext();let o=A.createOscillator(),n=A.createGain();o.type=t;o.frequency.value=f;n.gain.value=v;o.connect(n);n.connect(A.destination);o.start();n.gain.exponentialRampToValueAtTime(.001,A.currentTime+d);o.stop(A.currentTime+d)}catch(e){}}
-function bgm(){clearInterval(bi);bi=setInterval(()=>{if(!A)return;bs++;let a=AR[li];bp(a[bs%4]*(bs%16<8?1:1.2),.2,'triangle',.02);if(bs%4==0)bp(a[0]/2,.3,'triangle',.03)},300)}
-const hud=()=>{H.textContent=L.n+(need?' · Ký ức '+got+'/'+need:'')+(inv.length?' · Túi: '+inv.join(', '):'')+' · Tab: sổ tay · H: gợi ý'};
+function bp(f,d=.08,t='square',v=.04,m){v*=m?vm:vs;if(!v)return;try{A=A||new AudioContext();let o=A.createOscillator(),n=A.createGain();o.type=t;o.frequency.value=f;n.gain.value=v;o.connect(n);n.connect(A.destination);o.start();n.gain.exponentialRampToValueAtTime(.001,A.currentTime+d);o.stop(A.currentTime+d)}catch(e){}}
+function bgm(){clearInterval(bi);bi=setInterval(()=>{if(!A)return;bs++;let a=AR[li];bp(a[bs%4]*(bs%16<8?1:1.2),.2,'triangle',.02,1);if(bs%4==0)bp(a[0]/2,.3,'triangle',.03,1)},300)}
+const hud=()=>{H.textContent=t(L.n)+(need?' · '+t('Ký ức')+' '+got+'/'+need:'');hb()};
 function mkbg(){let b=mk(640,360),x=b.getContext('2d');
  if(L.out){let r=x.createLinearGradient(0,0,0,100);r.addColorStop(0,'#f0884a');r.addColorStop(1,'#ffd08a');x.fillStyle=r;x.fillRect(0,0,640,100);x.fillStyle='#fff1c1';x.fillRect(520,30,36,36);x.fillStyle=L.f;x.fillRect(0,100,640,260);for(let i=0;i<260;i++){x.fillStyle=i%3?'#8cb050':'#648038';x.fillRect(i*37%640,104+i*53%250,2,4)}}
  else{x.fillStyle=L.w;x.fillRect(0,0,640,100);x.fillStyle='rgba(0,0,0,.15)';x.fillRect(0,88,640,12);x.fillStyle=L.f;x.fillRect(0,100,640,260);for(let i=0;i<20;i++)for(let j=0;j<8;j++)if((i+j)%2){x.fillStyle='rgba(0,0,0,.1)';x.fillRect(i*32,100+j*32,32,32)}}
@@ -130,29 +169,29 @@ function load(i){li=i;L=LV[i];pal.s=L.gl||'#9ed0f0';mkbg();L.P.forEach(p=>p.done
  ents=L.F.concat([['door',592,24,44,76]]).map(e=>({t:e[0],x:e[1],y:e[2],w:e[3],h:e[4],z:e[5]??e[2]+e[4],sp:spr(e[3],e[4],fz(e[0],e[3],e[4]))}));
  cs=L.F.filter(e=>e[2]+e[4]>104).map(e=>e[4]>80?[e[1],e[2]+e[4]*.7,e[3],e[4]*.3]:[e[1],e[2],e[3],e[4]]);hud();bgm()}
 function ov(h,cb){V.innerHTML=h;V.style.display='flex';M='ov';ocb=cb}
-function say(a,cb){q=[].concat(a);qcb=cb;M='dlg';nx()}
+function say(a,cb){q=[].concat(a).map(t);qcb=cb;M='dlg';nx()}
 function nx(){if(!q.length){D.style.display='none';M='play';let f=qcb;qcb=0;f&&f();return}D.textContent=q.shift();D.style.display='block';bp(440,.03)}
 const sy=a=>new Promise(r=>say(a,r)),ft=t=>new Promise(r=>{fT=t;fcb=r;M='wait'});
-function title(){sc='play';mem=[];fade=0;load(0);ov('<h1>CHUYẾN TÀU<br>KÝ ỨC</h1><p>Một trò chơi giải đố ngắn</p><p class="s">Di chuyển: W A S D hoặc phím mũi tên · Tương tác: E / Space<br>Tab: sổ tay manh mối · H: gợi ý · Enter: qua thoại</p><p class="b">Nhấn Enter để bắt đầu</p>',()=>say(['Ba giờ sáng. Văn phòng chỉ còn mình anh và ngọn đèn bàn.','Ngoài cửa sổ, một đoàn tàu lạ vừa dừng lại. Trên thân tàu có tên: KÝ ỨC.','Anh tò mò bước về phía cửa toa tàu bên phải. Đến gần rồi nhấn E để lên tàu.']))}
-function go(i){if(i>4)return fin();load(i);let l=LV[i];ov('<p class="s">Ga tiếp theo</p><h2>'+l.t+'</h2><h1>'+l.n+'</h1><div class="rail"></div><p>'+l.in+'</p><p class="b">Nhấn Enter</p>',0)}
+function title(){sc='play';mem=[];fade=0;load(0);ov('<h1>'+t('CHUYẾN TÀU')+'<br>'+t('KÝ ỨC')+'</h1><p>'+t('Một trò chơi giải đố ngắn')+'</p><p class="s">'+t('Di chuyển: W A S D hoặc phím mũi tên · Enter: qua thoại')+'</p><p class="b">'+t('Nhấn Enter để bắt đầu')+'</p>',()=>say(['Ba giờ sáng. Văn phòng chỉ còn mình anh và ngọn đèn bàn.','Ngoài cửa sổ, một đoàn tàu lạ vừa dừng lại. Trên thân tàu có tên: KÝ ỨC.','Anh tò mò bước về phía cửa toa tàu bên phải. Đến gần rồi nhấn E để lên tàu.']))}
+function go(i){if(i>4)return fin();load(i);let l=LV[i];ov('<p class="s">'+t('Ga tiếp theo')+'</p><h2>'+t(l.t)+'</h2><h1>'+t(l.n)+'</h1><div class="rail"></div><p>'+t(l.in)+'</p><p class="b">'+t('Nhấn Enter')+'</p>',0)}
 function tg(){let b,bd=36;X.forEach(o=>{if(o.d||(o[0]=='z'&&L.P[o[3]].done))return;let d=Math.hypot(P.x-o[1],P.y-12-o[2]);if(d<bd){bd=d;b=o}});return Math.hypot(P.x-614,P.y-12-100)<46?'x':b}
-function win(p){p.done=1;got++;mem.push(p.n);cb=8;hud();bp(660);setTimeout(()=>bp(880),90);ov('<img src="'+ic(p.ic).toDataURL()+'" style="width:8em;image-rendering:pixelated"><h2>'+p.n+'</h2><p>'+p.m+'</p><p class="b">Enter</p>',()=>{if(got>=need)say('Tiếng còi tàu vang lên. Cửa toa tàu đã mở.')})}
+function win(p){p.done=1;got++;mem.push(p.n);IK[p.n]=p.ic;cb=8;hud();bp(660);setTimeout(()=>bp(880),90);ov('<img src="'+ic(p.ic).toDataURL()+'" style="width:8em;image-rendering:pixelated"><h2>'+t(p.n)+'</h2><p>'+t(p.m)+'</p><p class="b">Enter</p>',()=>{if(got>=need)say('Tiếng còi tàu vang lên. Cửa toa tàu đã mở.')})}
 function act(){let b=tg();if(!b)return;
  if(b=='x'){if(got>=need){bp(440);go(li+1)}else say('Cửa toa tàu đóng chặt. Vẫn còn ký ức chưa tìm thấy.');return}
  if(b[0]=='n'){say(b[3]);if(b[4]&&!nb.includes(b[3]))nb.push(b[3])}
- else if(b[0]=='p'){b.d=1;inv.push(b[4]);bp(740);hud();say('Nhặt được: '+b[4]+'. '+b[5])}
- else{let p=L.P[b[3]];if(p.t=='m'){let ms=p.need.filter(n=>!inv.includes(n));if(ms.length)say('Chưa làm được. Còn thiếu: '+ms.join(', ')+'.');else{inv=inv.filter(n=>!p.need.includes(n));win(p)}}else mod(p)}}
+ else if(b[0]=='p'){b.d=1;inv.push(b[4]);IK[b[4]]=b[3];bp(740);hud();say(t('Nhặt được: ')+t(b[4])+'. '+t(b[5]))}
+ else{let p=L.P[b[3]];if(p.t=='m'){let ms=p.need.filter(n=>!inv.includes(n));if(ms.length)say(t('Chưa làm được. Còn thiếu: ')+ms.map(t).join(', ')+'.');else{inv=inv.filter(n=>!p.need.includes(n));win(p)}}else mod(p)}}
 function fin2(p){W.style.display='none';M='play';win(p)}
-function mod(p){M='mod';let h='<p>'+p.q+'</p>';
- if(p.t=='c')h+='<div><input id="ci" maxlength="'+p.a.length+'" autocomplete="off"><button id="ok">Mở</button></div>';
- if(p.t=='s')h+='<div id="sq" class="s">Đã chọn: (trống)</div><div>'+p.o.map(o=>'<button class="sb">'+o+'</button>').join('')+'</div>';
- if(p.t=='d')h+='<div>'+p.cards.map(o=>'<span class="cd" draggable="true">'+o+'</span>').join('')+'</div><div>'+p.sl.map(o=>'<div class="sl"><small>'+o+'</small><br><b></b></div>').join('')+'</div><button id="ok">Xác nhận</button>';
- W.innerHTML=h+'<p class="s" id="ms">Esc: đóng</p>';W.style.display='flex';let bad=()=>{bp(150,.3,'sawtooth');$('ms').textContent='Chưa đúng. Hãy thử lại.'};
+function mod(p){M='mod';let h='<p>'+t(p.q||'')+'</p>';
+ if(p.t=='c')h+='<div><input id="ci" maxlength="'+p.a.length+'" autocomplete="off"><button id="ok">'+t('Mở')+'</button></div>';
+ if(p.t=='s')h+='<div id="sq" class="s">'+t('Đã chọn: ')+t('(trống)')+'</div><div>'+p.o.map(o=>'<button class="sb" data-v="'+o+'">'+t(o)+'</button>').join('')+'</div>';
+ if(p.t=='d')h+='<div>'+p.cards.map(o=>'<span class="cd" draggable="true" data-v="'+o+'">'+t(o)+'</span>').join('')+'</div><div>'+p.sl.map(o=>'<div class="sl"><small>'+t(o)+'</small><br><b data-v=""></b></div>').join('')+'</div><button id="ok">'+t('Xác nhận')+'</button>';
+ W.innerHTML=h+'<p class="s" id="ms">'+t('Esc: đóng')+'</p>';W.style.display='flex';let bad=()=>{bp(150,.3,'sawtooth');$('ms').textContent=t('Chưa đúng. Hãy thử lại.')};
  if(p.t=='c'){let i=$('ci'),f=()=>i.value.toUpperCase()==p.a?fin2(p):(bad(),i.value='');$('ok').onclick=f;i.onkeydown=e=>{if(e.key=='Enter')f()};i.focus()}
- if(p.t=='s'){let pk=[];W.querySelectorAll('.sb').forEach(b=>b.onclick=()=>{bp(520,.05);pk.push(b.textContent);$('sq').textContent='Đã chọn: '+pk.join(' → ');if(pk.length==p.a.length){if(pk.join()==p.a.join())fin2(p);else{bad();pk=[]}}})}
- if(p.t=='d'){W.querySelectorAll('.cd').forEach(e=>e.ondragstart=ev=>ev.dataTransfer.setData('t',e.textContent));W.querySelectorAll('.sl').forEach(s=>{s.ondragover=ev=>ev.preventDefault();s.ondrop=ev=>{ev.preventDefault();s.querySelector('b').textContent=ev.dataTransfer.getData('t');bp(520,.05)}});
-  $('ok').onclick=()=>{let v=[...W.querySelectorAll('.sl b')].map(e=>e.textContent);v.join()==p.a.join()?fin2(p):bad()}}}
-function book(){M='mod';nbo=1;W.innerHTML='<h2>Sổ tay manh mối</h2>'+(nb.length?nb.map(n=>'<p>• '+n+'</p>').join(''):'<p class="s">Chưa có manh mối nào. Hãy xem kỹ các vật quanh phòng.</p>')+'<p class="s">Tab / Esc: đóng</p>';W.style.display='flex'}
+ if(p.t=='s'){let pk=[];W.querySelectorAll('.sb').forEach(b=>b.onclick=()=>{bp(520,.05);pk.push(b.dataset.v);$('sq').textContent=t('Đã chọn: ')+pk.map(t).join(' → ');if(pk.length==p.a.length){if(pk.join()==p.a.join())fin2(p);else{bad();pk=[]}}})}
+ if(p.t=='d'){W.querySelectorAll('.cd').forEach(e=>e.ondragstart=ev=>ev.dataTransfer.setData('t',e.dataset.v));W.querySelectorAll('.sl').forEach(s=>{s.ondragover=ev=>ev.preventDefault();s.ondrop=ev=>{ev.preventDefault();let b=s.querySelector('b'),v=ev.dataTransfer.getData('t');b.dataset.v=v;b.textContent=t(v);bp(520,.05)}});
+  $('ok').onclick=()=>{let v=[...W.querySelectorAll('.sl b')].map(e=>e.dataset.v);v.join()==p.a.join()?fin2(p):bad()}}}
+function book(){M='mod';nbo=1;W.innerHTML='<h2>'+t('Sổ tay manh mối')+'</h2>'+(nb.length?nb.map(n=>'<p>• '+t(n)+'</p>').join(''):'<p class="s">'+t('Chưa có manh mối nào. Hãy xem kỹ các vật quanh phòng.')+'</p>')+'<p class="s">'+t('Tab / Esc: đóng')+'</p>';W.style.display='flex'}
 function shut(){W.style.display='none';M='play';nbo=0}
 async function fin(){
  await ft(1);sc='mom';await ft(0);
@@ -160,13 +199,13 @@ async function fin(){
  await ft(1);sc='desk';await ft(0);
  await sy(['Văn phòng im lặng. Chiếc đèn bàn vẫn sáng. Chiếc đồng hồ đã dừng lại.','Người đàn ông gục xuống bàn. Anh đã làm việc quá sức.','Đoàn tàu, những miền ký ức... chỉ là chút ý thức cuối cùng còn sót lại.','Anh ra đi lặng lẽ, trong vòng tay của mẹ ở một miền ký ức xa.']);
  await ft(1);
- ov('<h1>HẾT</h1><p class="s">Những ký ức anh mang theo</p><p class="s">'+mem.join(' · ')+'</p><p>Đừng để mình kiệt sức. Hãy nghỉ ngơi, và gọi cho người thân của bạn.</p><p class="b">Nhấn Enter để chơi lại</p>',title)}
+ ov('<h1>'+t('HẾT')+'</h1><p class="s">'+t('Những ký ức anh mang theo')+'</p><p class="s">'+mem.map(t).join(' · ')+'</p><p>'+t('Đừng để mình kiệt sức. Hãy nghỉ ngơi, và gọi cho người thân của bạn.')+'</p><p class="b">'+t('Nhấn Enter để chơi lại')+'</p>',title)}
 addEventListener('keydown',e=>{let k=e.key.toLowerCase();K[k]=1;A=A||(()=>{try{return new AudioContext()}catch(x){}})();
- if(M=='mod'){if(k=='escape'||(k=='tab'&&nbo)){e.preventDefault();shut()}return}
+ if(M=='pause'){if(k=='escape')rs();return}if((k=='escape'||k=='p')&&(M=='play'||M=='dlg')){pz();return}if(M=='mod'){if(k=='escape'||(k=='tab'&&nbo)){e.preventDefault();shut()}return}
  if(e.repeat)return;if(k.startsWith('arrow')||k==' '||k=='tab')e.preventDefault();
  if(M=='ov'&&(k=='enter'||k==' ')){V.style.display='none';M='play';let f=ocb;ocb=0;f&&f()}
  else if(M=='dlg'&&(k=='enter'||k==' '||k=='e'))nx();
- else if(M=='play'&&sc=='play'){if(k=='e'||k==' '||k=='enter')act();else if(k=='tab')book();else if(k=='h'){let p=L.P.find(p=>!p.done);say(p?'Gợi ý: '+p.h:'Mọi ký ức ở đây đã tìm thấy. Hãy ra cửa toa tàu.')}}});
+ else if(M=='play'&&sc=='play'){if(k=='e'||k==' '||k=='enter')act();else if(k=='tab')book();else if(k=='h'){let p=L.P.find(p=>!p.done);say(p?t('Gợi ý: ')+t(p.h):'Mọi ký ức ở đây đã tìm thấy. Hãy ra cửa toa tàu.')}}});
 addEventListener('keyup',e=>K[e.key.toLowerCase()]=0);
 function mv(a,b){let x=P.x+a,y=P.y+b;if(x<14||x>626||y<108||y>350)return;if(cs.some(s=>x+7>s[0]&&x-7<s[0]+s[2]&&y>s[1]&&y-6<s[1]+s[3]))return;P.x=x;P.y=y}
 function upd(dt){let dx=(K.d||K.arrowright?1:0)-(K.a||K.arrowleft?1:0),dy=(K.s||K.arrowdown?1:0)-(K.w||K.arrowup?1:0);if(dx&&dy){dx*=.7;dy*=.7}
@@ -194,6 +233,6 @@ function lp(ts){let dt=Math.min((ts-last)/1000,.05);last=ts;T+=dt;if(M=='play'&&
  if(fT!=null){let s=fT>fade?1:-1;fade+=s*dt*.9;if(s*(fade-fT)>=0){fade=fT;fT=null;let f=fcb;fcb=0;f&&f()}}
  sc=='mom'?mom():sc=='desk'?desk():world();
  if(fade>0){g.fillStyle='rgba(0,0,0,'+fade+')';g.fillRect(0,0,640,360)}
- I.style.display=(M=='play'&&sc=='play'&&tg())?'block':'none';requestAnimationFrame(lp)}
-document.fonts&&document.fonts.load('600 20px Handjet');title();requestAnimationFrame(lp);
+ I.style.display=(M=='play'&&sc=='play'&&tg())?'block':'none';KH.style.display=(M=='play'&&sc=='play')?'flex':'none';requestAnimationFrame(lp)}
+document.fonts&&document.fonts.load('600 20px Handjet');title();applyLang();requestAnimationFrame(lp);
 </script></body></html>
