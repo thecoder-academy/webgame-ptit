@@ -28,7 +28,7 @@ canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
 .hs{position:relative;width:1.35em;height:1.35em;box-sizing:border-box;background:#8b8b8b;border:.1em solid;border-color:#373737 #fff #fff #373737;display:flex;align-items:center;justify-content:center}
 .hs img{width:1.05em;image-rendering:pixelated}
 .hs[data-n]:hover::after{content:attr(data-n);position:absolute;top:115%;left:0;white-space:nowrap;background:rgba(16,0,16,.94);border:.1em solid #2a0a5e;color:#fff;padding:.05em .4em;z-index:8;font-size:.8em}
-#PB{position:absolute;top:2%;right:2%;z-index:9;font:inherit;font-size:.9em;font-weight:700;background:rgba(0,0,0,.6);color:#ffd77a;border:.12em solid #ffd77a;padding:0 .5em;cursor:pointer}
+#PB{position:absolute;top:2%;right:2%;z-index:9;width:2.2em;height:2.2em;font-size:.8em;border-width:.14em;border-bottom-width:.38em;background-size:42%}
 #KH{position:absolute;left:2%;bottom:3%;display:none;flex-direction:column;gap:.2em;font-size:.6em}
 #KH kbd{display:inline-block;min-width:1.4em;text-align:center;font:inherit;border:.15em solid #ffd77a;color:#ffd77a;background:rgba(0,0,0,.6);padding:0 .35em;margin-right:.4em}
 #PM button{display:block;min-width:9em}
@@ -59,10 +59,22 @@ canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
 .cd{display:inline-block;margin:.15em;padding:.1em .6em;background:#3b3358;border:.1em solid #ffd77a;cursor:grab}
 .sl{display:inline-block;min-width:5.5em;min-height:1.6em;margin:.15em;padding:.1em .4em;border:.1em dashed #7fe3a8;vertical-align:top}
 .sl small{opacity:.7}
+.pb{box-sizing:border-box;background:#2a2440 center/50% no-repeat;border:3px solid #f5c842;border-bottom-width:8px;padding:0;margin:0;cursor:pointer;color:#f5c842;font-family:Handjet,monospace;font-weight:600;font-size:max(18px,4vmin);image-rendering:pixelated;display:flex;align-items:center;justify-content:center;gap:.4em;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.pb.on{transform:translateY(3px);border-bottom-width:5px}
+.pb i{width:1em;height:1em;background:center/contain no-repeat}
+#TC{display:none;position:fixed;left:0;right:0;bottom:0;padding:0 2vmin calc(2vmin + env(safe-area-inset-bottom,0px));justify-content:space-between;align-items:flex-end;pointer-events:none;z-index:20;--b:clamp(40px,11vmin,60px)}
+#TC>*{pointer-events:auto}
+#TC .pb{width:var(--b);height:var(--b)}
+#TC .pb.w{width:auto;min-width:calc(var(--b)*2);padding:0 .6em;height:calc(var(--b)*.8)}
+#DP{display:grid;grid-template-columns:repeat(3,var(--b));grid-template-rows:repeat(3,var(--b));gap:1vmin}
+#DP [data-k=ArrowUp]{grid-area:1/2}#DP [data-k=ArrowLeft]{grid-area:2/1}#DP [data-k=ArrowRight]{grid-area:2/3}#DP [data-k=ArrowDown]{grid-area:3/2}
+#AC{display:flex;flex-direction:column;align-items:flex-end;gap:1vmin}
+@media (pointer:coarse),(hover:none){#TC{display:flex}#KH{display:none!important}}
+@media (pointer:coarse) and (orientation:landscape){#D{left:22%;right:22%}}
 @media (prefers-reduced-motion:reduce){.b,#D::after,.rail{animation:none}}
 </style></head><body>
 <div id="g"><canvas id="c" width="640" height="360"></canvas>
-<div id="TL"><div id="H"></div><button id="BP"></button></div><button id="PB">||</button><div id="I"></div><div id="KH"></div><div id="D"></div>
+<div id="TL"><div id="H"></div><button id="BP"></button></div><button id="PB" class="pb"></button><div id="I"></div><div id="KH"></div><div id="D"></div>
 <div class="ov" id="W"></div><div class="ov" id="V"></div><div class="ov" id="PM" style="z-index:10"></div></div>
 <script>
 const $=i=>document.getElementById(i),c=$('c'),g=c.getContext('2d'),D=$('D'),V=$('V'),W=$('W'),H=$('H'),I=$('I');
@@ -149,7 +161,7 @@ const LV=[
 const AR=[[196,247,294,247],[262,330,392,330],[220,262,330,262],[294,349,440,349],[262,330,392,523]];
 let M='ov',L,li=0,ents,X,cs,bg,P,got=0,need=0,inv=[],nb=[],mem=[],sc='play',T=0,last=performance.now(),fade=0,fT=null,fcb,q=[],qcb,ocb,K={},A,ca=0,cb=0,bi,bs=0,SP={},nbo=0;
 let lang='vi',vs=1,vm=1,pm,IK={},DS={};const HB=$('HB'),KH=$('KH'),PM=$('PM'),PB=$('PB'),BP=$('BP');
-const EN={'MÃ TỦ = SỐ BÀN + NGÀY':'CODE = DESK + DAY','BÀN SỐ 12':'DESK No. 12','Tháng 3':'March','Tháng 9':'September','Đại số':'Algebra','Giải tích':'Calculus','Vật lý':'Physics','Ba lô':'Backpack','Kho đồ của bạn':'Your Inventory','Tên vật phẩm':'Item name','Mô tả của vật phẩm':'The item description will appear here.','Văn phòng · 03:07':'Office · 03:07','KÝ ỨC 1 · 25 TUỔI':'MEMORY 1 · AGE 25','KÝ ỨC 2 · 21 TUỔI':'MEMORY 2 · AGE 21','KÝ ỨC 3 · 15 TUỔI':'MEMORY 3 · AGE 15','KÝ ỨC 4 · 6 TUỔI':'MEMORY 4 · AGE 6','Ngày đầu đi làm':'First Day at Work','Giảng đường đại học':'University Lecture Hall','Thời học sinh':'School Days','Về quê thuở ấu thơ':'Back to the Countryside',
+const EN={'Phiên bản':'Version','Hãy bật toàn màn hình':'Go fullscreen for the best experience!','MÃ TỦ = SỐ BÀN + NGÀY':'CODE = DESK + DAY','BÀN SỐ 12':'DESK No. 12','Tháng 3':'March','Tháng 9':'September','Đại số':'Algebra','Giải tích':'Calculus','Vật lý':'Physics','Ba lô':'Backpack','Kho đồ của bạn':'Your Inventory','Tên vật phẩm':'Item name','Mô tả của vật phẩm':'The item description will appear here.','Văn phòng · 03:07':'Office · 03:07','KÝ ỨC 1 · 25 TUỔI':'MEMORY 1 · AGE 25','KÝ ỨC 2 · 21 TUỔI':'MEMORY 2 · AGE 21','KÝ ỨC 3 · 15 TUỔI':'MEMORY 3 · AGE 15','KÝ ỨC 4 · 6 TUỔI':'MEMORY 4 · AGE 6','Ngày đầu đi làm':'First Day at Work','Giảng đường đại học':'University Lecture Hall','Thời học sinh':'School Days','Về quê thuở ấu thơ':'Back to the Countryside',
 'Mùi giấy mới':'The smell of fresh paper, a small desk and big hopes. Find the 3 items from that day.','Những đêm thức':'Late nights chasing dreams, laughter after class. Find the 3 items from those years.','Tiếng trống trường':'School drums, chalk dust and naive promises. Find the 3 items from that day.','Cánh đồng, mùi khói':'Fields, kitchen smoke and a familiar embrace. Find the last 3 items.',
 'Bảng trắng ghi':'The whiteboard lists this week’s meetings: Monday — Report. Tuesday — Contract. Wednesday — Budget. Thursday — New Project.','Lịch tháng 3':'March calendar: the 7th is circled in red. Your first day at work.','Lịch tháng 9':'A former colleague’s September calendar, the 21st circled in blue. Not yours.','Bảng tên trên':'Desk nameplate: DESK No. 12.','Post-it dán':'A sticky note on the locker: Locker code = desk number + first day at work.','Chậu cây héo':'The potted plant has wilted. You never got around to watering it last week.',
 'Gói cà phê':'Coffee packet','Gói cà phê hòa':'Instant coffee, still sealed in the desk drawer.','Cốc':'Cup','Chiếc cốc sứ':'An empty porcelain cup on the desk.','Tủ khóa 4 số':'A 4-digit locker. Enter the code.','Cà vạt của mẹ':'Mom’s Necktie','Chiếc cà vạt m':'The necktie Mom gave you. She said: don’t forget to eat on time.','Mã = số bàn':'Code = desk number (2 digits) + first day at work (2 digits). Pick the right calendar.',
@@ -209,7 +221,7 @@ function ov(h,cb){V.innerHTML=h;V.style.display='flex';M='ov';ocb=cb}
 function say(a,cb){q=[].concat(a).map(t);qcb=cb;M='dlg';nx()}
 function nx(){if(!q.length){D.style.display='none';M='play';let f=qcb;qcb=0;f&&f();return}D.textContent=q.shift();D.style.display='block';bp(440,.03)}
 const sy=a=>new Promise(r=>say(a,r)),ft=t=>new Promise(r=>{fT=t;fcb=r;M='wait'});
-function title(){sc='play';mem=[];fade=0;load(0);ov('<h1>'+t('CHUYẾN TÀU')+'<br>'+t('KÝ ỨC')+'</h1><p>'+t('Một trò chơi giải đố ngắn')+'</p><p class="s">'+t('Di chuyển: W A S D hoặc phím mũi tên · Enter: qua thoại')+'</p><p class="b">'+t('Nhấn Enter để bắt đầu')+'</p>',()=>say(['Ba giờ sáng. Văn phòng chỉ còn mình anh và ngọn đèn bàn.','Ngoài cửa sổ, một đoàn tàu lạ vừa dừng lại. Trên thân tàu có tên: KÝ ỨC.','Anh tò mò bước về phía cửa toa tàu bên phải. Đến gần rồi nhấn E để lên tàu.']))}
+function title(){sc='play';mem=[];fade=0;load(0);ov('<h1>'+t('CHUYẾN TÀU')+'<br>'+t('KÝ ỨC')+'</h1><p>'+t('Một trò chơi giải đố ngắn')+'</p><p class="s">'+t('Di chuyển: W A S D hoặc phím mũi tên · Enter: qua thoại')+'</p><p class="b">'+t('Nhấn Enter để bắt đầu')+'</p><p class="s">'+t('Phiên bản')+' '+VER+'</p><p class="s">'+t('Hãy bật toàn màn hình để có trải nghiệm chơi tốt nhất!')+'</p>',()=>say(['Ba giờ sáng. Văn phòng chỉ còn mình anh và ngọn đèn bàn.','Ngoài cửa sổ, một đoàn tàu lạ vừa dừng lại. Trên thân tàu có tên: KÝ ỨC.','Anh tò mò bước về phía cửa toa tàu bên phải. Đến gần rồi nhấn E để lên tàu.']))}
 function go(i){if(i>4)return fin();load(i);let l=LV[i];ov('<p class="s">'+t('Ga tiếp theo')+'</p><h2>'+t(l.t)+'</h2><h1>'+t(l.n)+'</h1><div class="rail"></div><p>'+t(l.in)+'</p><p class="b">'+t('Nhấn Enter')+'</p>',0)}
 function tg(){let b,bd=36;X.forEach(o=>{if(o.d||(o[0]=='z'&&L.P[o[3]].done))return;let d=Math.hypot(P.x-o[1],P.y-12-o[2]);if(d<bd){bd=d;b=o}});return Math.hypot(P.x-614,P.y-12-100)<46?'x':b}
 function win(p){p.done=1;got++;mem.push(p.n);IK[p.n]=p.ic;DS[p.n]=p.m;cb=8;hud();bp(660);setTimeout(()=>bp(880),90);ov('<img src="'+ic(p.ic).toDataURL()+'" style="width:8em;image-rendering:pixelated"><h2>'+t(p.n)+'</h2><p>'+t(p.m)+'</p><p class="b">Enter</p>',()=>{if(got>=need)say('Tiếng còi tàu vang lên. Cửa toa tàu đã mở.')})}
@@ -271,5 +283,15 @@ function lp(ts){let dt=Math.min((ts-last)/1000,.05);last=ts;T+=dt;if(M=='play'&&
  sc=='mom'?mom():sc=='desk'?desk():world();
  if(fade>0){g.fillStyle='rgba(0,0,0,'+fade+')';g.fillRect(0,0,640,360)}
  I.style.display=(M=='play'&&sc=='play'&&tg())?'block':'none';KH.style.display=(M=='play'&&sc=='play')?'flex':'none';requestAnimationFrame(lp)}
+const VER='0.6';
+const pix=(r,c)=>{let s='';r.forEach((l,y)=>[...l].forEach((ch,x)=>{if(ch=='#')s+='<rect x="'+x+'" y="'+y+'" width="1" height="1"/>'}));return 'url("data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+r[0].length+' '+r.length+'" fill="'+(c||'#f5c842')+'" shape-rendering="crispEdges">'+s+'</svg>')+'")'};
+const AI={u:['...#...','..###..','.#####.','#######'],l:['...#','..##','.###','####','.###','..##','...#'],x:['#...#','.#.#.','..#..','.#.#.','#...#'],e:['.......#','.......#','..#....#','.#######','..#.....'],p:['##.##','##.##','##.##','##.##','##.##']};
+AI.d=AI.u.slice().reverse();AI.r=AI.l.map(s=>[...s].reverse().join(''));
+PB.style.backgroundImage=pix(AI.p);
+document.body.insertAdjacentHTML('beforeend','<div id="TC"><div id="DP"><button class="pb" data-k="ArrowUp"></button><button class="pb" data-k="ArrowLeft"></button><button class="pb" data-k="ArrowRight"></button><button class="pb" data-k="ArrowDown"></button></div><div id="AC"><div style="display:flex;gap:1vmin"><button class="pb" data-k="h">H</button><button class="pb" data-k="Tab">TAB</button></div><button class="pb w" data-k="Enter"><i></i>ENTER</button><button class="pb w" data-k="Escape"><i></i>ESC</button></div></div>');
+const IM={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r'};
+document.querySelectorAll('#TC [data-k]').forEach(b=>{let k=b.dataset.k,a=IM[k],fire=ty=>dispatchEvent(new KeyboardEvent(ty,{key:k}));if(a)b.style.backgroundImage=pix(AI[a]);if(k=='Enter')b.firstChild.style.backgroundImage=pix(AI.e);if(k=='Escape')b.firstChild.style.backgroundImage=pix(AI.x);
+ b.onpointerdown=e=>{e.preventDefault();fire('keydown');b.classList.add('on');if(!a)setTimeout(()=>fire('keyup'),60)};
+ b.onpointerup=b.onpointerleave=b.onpointercancel=()=>{b.classList.remove('on');if(a)fire('keyup')}});
 document.fonts&&document.fonts.load('600 20px Handjet');title();applyLang();requestAnimationFrame(lp);
 </script></body></html>
